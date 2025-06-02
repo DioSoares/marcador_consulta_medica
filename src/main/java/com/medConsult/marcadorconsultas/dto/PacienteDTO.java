@@ -9,23 +9,21 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MedicoDTO {
+public class PacienteDTO {
 
     private Long id;
 
-    @NotBlank(message = "O nome é obrigatório")
+    @NotBlank(message = "Nome é obrigatório")
     private String nome;
 
-    @NotBlank(message = "A especialidade é obrigatória")
-    private String especialidade;
+    @NotBlank(message = "CPF é obrigatório")
+    private String cpf;
 
-    @NotBlank(message = "O CRM é obrigatório")
-    private String crm;
-
-    @NotBlank(message = "O telefone é obrigatório")
+    @NotBlank(message = "Telefone é obrigatório")
     private String telefone;
 
     @NotBlank(message = "Email é obrigatório")
-    @Email(message = "Email inválido")
+    @Email(message = "Email Inválido")
     private String email;
+
 }
