@@ -2,6 +2,7 @@ package com.medConsult.marcadorconsultas.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 @Getter
@@ -13,10 +14,11 @@ public class PacienteDTO {
 
     private Long id;
 
-    @NotBlank(message = "Nome é obrigatório")
+    @NotBlank(message = "O nome do paciente é obrigatório")
     private String nome;
 
-    @NotBlank(message = "CPF é obrigatório")
+    @NotBlank(message = "O CPF é obrigatório")
+    @Pattern(regexp = "\\d{11}", message = "O CPF deve conter 11 dígitos númericos")
     private String cpf;
 
     @NotBlank(message = "Telefone é obrigatório")

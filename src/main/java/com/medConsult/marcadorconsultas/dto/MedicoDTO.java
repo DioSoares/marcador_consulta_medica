@@ -13,7 +13,7 @@ public class MedicoDTO {
 
     private Long id;
 
-    @NotBlank(message = "O nome é obrigatório")
+    @NotBlank(message = "O nome do médico é obrigatório")
     private String nome;
 
     @NotBlank(message = "A especialidade é obrigatória")
@@ -25,7 +25,7 @@ public class MedicoDTO {
     @NotBlank(message = "O telefone é obrigatório")
     private String telefone;
 
-    @NotBlank(message = "Email é obrigatório")
+    @NotBlank(message = "O email é obrigatório")
     @Email(message = "Email inválido")
     private String email;
 }

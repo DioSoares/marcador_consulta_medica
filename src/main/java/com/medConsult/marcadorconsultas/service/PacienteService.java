@@ -1,6 +1,7 @@
 package com.medConsult.marcadorconsultas.service;
 
 import com.medConsult.marcadorconsultas.dto.PacienteDTO;
+import com.medConsult.marcadorconsultas.exception.DuplicateResourceException;
 import com.medConsult.marcadorconsultas.model.Paciente;
 import com.medConsult.marcadorconsultas.repository.PacienteRepository;
 import jakarta.transaction.Transactional;
@@ -38,6 +39,10 @@ public class PacienteService {
 
     @Transactional
     public PacienteDTO salvar(PacienteDTO dto) {
+
+        if(pacienteRepository.existsByCpf(dto.getCpf())) {
+            throw new DuplicateResourceException("Já existe um paciente com o CPF " + dto.getCpf());
+        }
         Paciente paciente = toEntity(dto);
         Paciente salvo = pacienteRepository.save(paciente);
         return toDTO(salvo);

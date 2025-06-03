@@ -1,6 +1,8 @@
 package com.medConsult.marcadorconsultas.service;
 
 import com.medConsult.marcadorconsultas.dto.ConsultaDTO;
+import com.medConsult.marcadorconsultas.exception.ConflictException;
+import com.medConsult.marcadorconsultas.exception.ResourceNotFoundException;
 import com.medConsult.marcadorconsultas.model.Consulta;
 import com.medConsult.marcadorconsultas.model.Medico;
 import com.medConsult.marcadorconsultas.model.Paciente;
@@ -11,6 +13,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,11 +27,15 @@ public class ConsultaService {
 
     @Transactional
     public ConsultaDTO salvar(ConsultaDTO dto) {
+
+        if(consultaRepository.existsByMedicoIdAndDataHora(dto.getMedicoId(),dto.getDataHora())) {
+            throw new ConflictException("Já existe uma consulta marcada com esse médico nesse horário.");
+        }
         Medico medico = medicoRepository.findById(dto.getMedicoId())
-                .orElseThrow(() -> new RuntimeException("Médico não encontrado."));
+                .orElseThrow(() -> new ResourceNotFoundException("Médico não encontrado com id: " + dto.getMedicoId()));
 
         Paciente paciente = pacienteRepository.findById(dto.getPacienteId())
-                .orElseThrow(()-> new RuntimeException("Paciente não encontrado."));
+                .orElseThrow(()-> new ResourceNotFoundException("Paciente não encontrado com id: "+ dto.getPacienteId()));
 
         Consulta consulta = Consulta.builder()
                 .medico(medico)
