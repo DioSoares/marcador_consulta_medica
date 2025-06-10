@@ -5,15 +5,35 @@ import com.medConsult.marcadorconsultas.exception.ConflictException;
 import com.medConsult.marcadorconsultas.model.Usuario;
 import com.medConsult.marcadorconsultas.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class UsuarioService {
+public class UsuarioService implements UserDetailsService {
 
     private final UsuarioRepository usuarioRepository;
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+        return org.springframework.security.core.userdetails.User
+                .withUsername(usuario.getEmail())
+                .password(usuario.getSenha())
+                .roles(usuario.getPerfil().name())
+                .build();
+    }
+
+    public void salvarComSenhaCriptografada (Usuario usuario) {
+        usuario.setSenha(new BCryptPasswordEncoder().encode(usuario.getSenha()));
+        usuarioRepository.save(usuario);
+    }
 
     public Usuario salvar(UsuarioDTO dto) {
         if (usuarioRepository.existsByCpf(dto.getCpf())) {
@@ -52,4 +72,9 @@ public class UsuarioService {
         Usuario usuario = buscarPorId(id);
         usuarioRepository.delete(usuario);
     }
+
+    public boolean usuarioExiste(String email) {
+        return usuarioRepository.existsByEmail(email);
+    }
+
 }

@@ -24,4 +24,13 @@ public class UsuarioDTO {
     private String especialidade;
 
     private String crm;
+
+    public record LoginRequest(
+        @NotBlank(message = "O email é obrigatório") String email,
+        @NotBlank(message = "A senha é obrigatória") String senha
+    ) {}
+
+    public record LoginResponse(
+        String token
+    ) {}
 }

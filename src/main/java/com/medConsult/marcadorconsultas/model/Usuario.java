@@ -16,7 +16,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Usuario {
 
-    @Id@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank(message = "O nome é obrigatório")
@@ -37,12 +38,13 @@ public class Usuario {
     @Enumerated(EnumType.STRING)
     private Perfil perfil;
 
+    private String senha;
+
     // Somente para médicos!!!!
 
     private String especialidade;
 
     @Column(unique = true)
     private String crm;
-
 
 }
